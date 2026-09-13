@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Метод нахождения площади фигуры под графиком в ЕГЭ по физике</title>
+
+    <!-- Подключение и настройка MathJax для рендеринга LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-primary: #2563eb;
+            --accent-secondary: #0d9488;
+            --accent-warning: #d97706;
+            --border-color: #e2e8f0;
+            --math-bg: #f1f5f9;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.65;
+            padding: 20px 12px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-top: 5px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 28px 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: clamp(1.4rem, 4vw, 1.85rem);
+            color: #0f172a;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .header-desc {
+            color: var(--text-muted);
+            font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+        }
+
+        .toc {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .toc-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #334155;
+        }
+
+        .toc ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        @media (min-width: 600px) {
+            .toc ul {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+        }
+
+        .toc a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--accent-primary);
+            transition: border-bottom-style 0.2s;
+        }
+
+        .toc a:hover {
+            border-bottom-style: solid;
+        }
+
+        section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        @media (min-width: 768px) {
+            section {
+                padding: 32px;
+            }
+        }
+
+        h2 {
+            font-size: clamp(1.2rem, 3.5vw, 1.45rem);
+            color: #0f172a;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        h3 {
+            font-size: clamp(1.05rem, 3vw, 1.2rem);
+            color: #1e293b;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 14px;
+        }
+
+        .callout {
+            border-left: 4px solid var(--accent-primary);
+            background-color: #f8fafc;
+            padding: 14px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 18px 0;
+        }
+
+        .callout.warning {
+            border-left-color: var(--accent-warning);
+            background-color: #fffbeb;
+        }
+
+        .callout.tip {
+            border-left-color: var(--accent-secondary);
+            background-color: #f0fdfa;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .warning .callout-title { color: var(--accent-warning); }
+        .tip .callout-title { color: var(--accent-secondary); }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .exam-table {
+            width: 100%;
+            min-width: 520px;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            text-align: left;
+        }
+
+        .exam-table th, .exam-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            vertical-align: top;
+        }
+
+        .exam-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .math-block {
+            background: var(--math-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin: 14px 0;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .diagram-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        @media (min-width: 680px) {
+            .diagram-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .diagram-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .diagram-box svg {
+            width: 100%;
+            height: auto;
+            max-width: 280px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .diagram-caption {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        details {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 14px 0;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        summary {
+            font-weight: 600;
+            padding: 12px 16px;
+            cursor: pointer;
+            background: #f8fafc;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        summary:hover {
+            background: #f1f5f9;
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .details-body {
+            padding: 16px;
+        }
+
+        ol, ul {
+            padding-left: 20px;
+            margin-bottom: 14px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <span class="badge">Теоретический справочник • Физика ЕГЭ</span>
+        <h1>Метод нахождения площади фигуры под графиком в решении задач по физике</h1>
+        <p class="header-desc">Геометрический метод вычисления интегральных величин: определение пути и перемещения в кинематике, расчет термодинамической работы в процессах и замкнутых циклах без использования сложного аналитического аппарата.</p>
+        
+        <nav class="toc">
+            <div class="toc-title">Содержание справочника:</div>
+            <ul>
+                <li><a href="#math-theory">1. Физический и геометрический смысл площади</a></li>
+                <li><a href="#exam-tasks">2. Задачи кодификатора ЕГЭ</a></li>
+                <li><a href="#physics-sections">3. Применение в разделах физики</a></li>
+                <li><a href="#practice">4. Примеры решений и методические рекомендации</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 1. Геометрический и физический смысл площади -->
+    <section id="math-theory">
+        <h2>1. Физический и геометрический смысл метода</h2>
+        <p>В физике многие искомые величины представляют собой произведение двух переменных величин (например, $s = v \cdot t$, $A = p \cdot \Delta V$, $q = I \cdot t$). Если один из параметров непрерывно изменяется, прямое перемножение величин становится невозможным. В таких случаях вычисление сводится к <strong>определению площади под графиком соответствующей функциональной зависимости</strong>.</p>
+
+        <div class="math-block">
+            $$X = \int_{z_1}^{z_2} f(z)\,dz = S_{\text{фигуры под графиком}}$$
+        </div>
+
+        <h3>Принцип разбиения на элементарные участки</h3>
+        <p>Если разбить процесс на бесконечно малые интервалы $\Delta t$, на каждом из которых изменяющийся параметр можно считать практически постоянным, суммарный эффект процесса равен сумме площадей узких полосок (прямоугольников Римана):</p>
+        <div class="math-block">
+            $$S_{\text{полн}} = \lim_{\Delta t \to 0} \sum f(t_i) \cdot \Delta t_i$$
+        </div>
+        <p>На практике при линейных графических зависимостях криволинейные трапеции сводятся к простым геометрическим фигурам: прямоугольникам, треугольникам и прямоугольным трапециям.</p>
+
+        <h3>Основные геометрические формулы в графических задачах</h3>
+        <div class="table-wrapper">
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>Геометрическая фигура</th>
+                        <th>Формула площади</th>
+                        <th>Типовое физическое соответствие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Прямоугольник</td>
+                        <td>$S = a \cdot b$</td>
+                        <td>Равномерное движение ($s = v \cdot t$) или изобарный процесс ($A = p \cdot \Delta V$).</td>
+                    </tr>
+                    <tr>
+                        <td>Треугольник (прямоугольный)</td>
+                        <td>$S = \dfrac{1}{2} a \cdot b$</td>
+                        <td>Разгон из состояния покоя ($s = \frac{at^2}{2}$) или замкнутый треугольный термодинамический цикл.</td>
+                    </tr>
+                    <tr>
+                        <td>Трапеция</td>
+                        <td>$S = \dfrac{a + b}{2} \cdot h$</td>
+                        <td>Равноускоренное движение с начальной скоростью: $s = \frac{v_0 + v}{2} \cdot t$.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 2. Где встречается на ЕГЭ -->
+    <section id="exam-tasks">
+        <h2>2. Задачи кодификатора ЕГЭ, решаемые графическим методом</h2>
+        <p>Использование геометрической площади фигуры позволяет существенно ускорить нахождение числового ответа и избежать громоздких алгебраических преобразований.</p>
+        
+        <div class="table-wrapper">
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>Линии заданий</th>
+                        <th>Тематический блок</th>
+                        <th>Применение метода площади</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>№ 3</strong></td>
+                        <td>Механика (Кинематика)</td>
+                        <td>Определение пройденного пути $l$ и проекции перемещения $s_x$ по графику проекции скорости $v_x(t)$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>№ 8–10</strong></td>
+                        <td>МКТ и термодинамика</td>
+                        <td>Расчёт работы газа $A$ в процессах расширения/сжатия и замкнутых циклах по графику $p(V)$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>№ 12–13</strong></td>
+                        <td>Электродинамика</td>
+                        <td>Определение электрического заряда $q$, прошедшего через проводник, по графику зависимости силы тока от времени $I(t)$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>№ 21–25</strong></td>
+                        <td>Задания с развёрнутым ответом</td>
+                        <td>Расчёт работы переменной силы $A = S_{F(x)}$ или изменения импульса тела $\Delta p = S_{F(t)}$.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout tip">
+            <div class="callout-title">Применение метода во второй части экзамена</div>
+            Данный способ принимается экспертами без ограничений, так как опирается на строгий геометрический смысл определённого интеграла. При оформлении решения во второй части достаточно указать: <em>«Искомая величина численно равна площади фигуры под графиком»</em>, после чего привести геометрический расчёт площади с подстановкой значений в единицах СИ.
+        </div>
+    </section>
+
+    <!-- 3. Применение в профильных разделах курса -->
+    <section id="physics-sections">
+        <h2>3. Применение метода в профильных разделах курса</h2>
+
+        <div class="diagram-container">
+            <div class="diagram-box">
+                <!-- SVG: Трапеция в кинематике -->
+                <svg viewBox="0 0 280 200">
+                    <defs>
+                        <pattern id="grid_area1" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="280" height="200" fill="url(#grid_area1)" />
+                    
+                    <polygon points="40,160 40,110 200,50 200,160" fill="rgba(37, 99, 235, 0.2)" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3,3" />
+                    
+                    <line x1="30" y1="160" x2="260" y2="160" stroke="#334155" stroke-width="2" />
+                    <line x1="40" y1="170" x2="40" y2="20" stroke="#334155" stroke-width="2" />
+                    <line x1="40" y1="110" x2="200" y2="50" stroke="#2563eb" stroke-width="2.5" />
+                    
+                    <text x="255" y="178" font-size="12" font-weight="bold" fill="#334155">t, с</text>
+                    <text x="15" y="30" font-size="12" font-weight="bold" fill="#334155">v, м/с</text>
+                    <text x="20" y="115" font-size="11" fill="#475569">v₀</text>
+                    <line x1="36" y1="110" x2="44" y2="110" stroke="#334155" stroke-width="1.5" />
+                    <text x="25" y="55" font-size="11" fill="#475569">v</text>
+                    <line x1="36" y1="50" x2="44" y2="50" stroke="#334155" stroke-width="1.5" />
+                    <line x1="40" y1="50" x2="200" y2="50" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2,2" />
+                    <text x="195" y="178" font-size="11" fill="#475569">t</text>
+                    <line x1="200" y1="156" x2="200" y2="164" stroke="#334155" stroke-width="1.5" />
+                    
+                    <text x="80" y="125" font-size="12" font-weight="bold" fill="#1d4ed8">S = (v₀ + v)·t / 2</text>
+                </svg>
+                <div class="diagram-caption">Рис 1. Перемещение при равноускоренном движении как площадь трапеции</div>
+            </div>
+
+            <div class="diagram-box">
+                <!-- SVG: Замкнутый термодинамический цикл -->
+                <svg viewBox="0 0 280 200">
+                    <defs>
+                        <pattern id="grid_area2" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="280" height="200" fill="url(#grid_area2)" />
+                    
+                    <polygon points="70,60 200,60 200,140 70,140" fill="rgba(217, 119, 6, 0.2)" stroke="#d97706" stroke-width="2" />
+                    
+                    <line x1="30" y1="160" x2="260" y2="160" stroke="#334155" stroke-width="2" />
+                    <line x1="40" y1="170" x2="40" y2="20" stroke="#334155" stroke-width="2" />
+                    
+                    <!-- Стрелки направления цикла (по часовой стрелке) -->
+                    <polygon points="140,57 150,60 140,63" fill="#d97706" />
+                    <polygon points="203,105 200,115 197,105" fill="#d97706" />
+                    <polygon points="130,143 120,140 130,137" fill="#d97706" />
+                    <polygon points="67,95 70,85 73,95" fill="#d97706" />
+                    
+                    <text x="250" y="178" font-size="12" font-weight="bold" fill="#334155">V, м³</text>
+                    <text x="12" y="30" font-size="12" font-weight="bold" fill="#334155">p, Па</text>
+                    
+                    <text x="80" y="105" font-size="12" font-weight="bold" fill="#b45309">A = S цикла > 0</text>
+                </svg>
+                <div class="diagram-caption">Рис 2. Работа за цикл как внутренняя площадь контура в осях p-V</div>
+            </div>
+        </div>
+
+        <h3>Кинематика: различие между путём и перемещением</h3>
+        <p>При прямолинейном движении площадь под графиком $v_x(t)$ определяет величину пройденного расстояния. При наличии участков с отрицательной скоростью необходимо строго разграничивать путь и проекцию перемещения:</p>
+        <ul>
+            <li><strong>Пройденный путь ($l$):</strong> Скалярная величина, которая монотонно накапливается. Площади всех участков (как выше, так и ниже оси времени) складываются по абсолютному значению:
+                <div class="math-block">
+                    $$l = |S_{\text{над осью}}| + |S_{\text{под осью}}|$$
+                </div>
+            </li>
+            <li><strong>Проекция перемещения ($s_x$):</strong> Векторная величина. Площадь области выше оси времени входит со знаком «плюс», а область ниже оси — со знаком «минус»:
+                <div class="math-block">
+                    $$s_x = S_{\text{над осью}} - S_{\text{под осью}}$$
+                </div>
+            </li>
+        </ul>
+
+        <h3>Термодинамика: работа газа в процессах расширения и замкнутых циклах</h3>
+        <p>Элементарная работа термодинамической системы при изменении объема равна $dA = p\,dV$. Полная работа газа в координатах $p-V$ рассчитывается геометрически:</p>
+        <ol>
+            <li><strong>Изохорный процесс ($V = \text{const}$):</strong> Линия процесса вертикальна, площадь фигуры равна нулю: <strong>$A = 0$</strong>.</li>
+            <li><strong>Изобарный процесс ($p = \text{const}$):</strong> График представляет собой горизонтальный отрезок. Фигура — прямоугольник: <strong>$A = p \cdot (V_2 - V_1)$</strong>.</li>
+            <li><strong>Линейное изменение давления от объема:</strong> Фигура под графиком представляет собой трапецию (или совокупность прямоугольника и треугольника):
+                <div class="math-block">
+                    $$A = \frac{p_1 + p_2}{2} \cdot (V_2 - V_1)$$
+                </div>
+            </li>
+            <li><strong>Круговой замкнутый цикл:</strong> Работа газа за один полный цикл численно равна <strong>площади замкнутой фигуры</strong>, ограниченной линиями цикла:
+                <ul>
+                    <li>Если цикл проходится <strong>по часовой стрелке</strong>, работа газа положительна: $A_{\text{цикла}} > 0$.</li>
+                    <li>Если цикл проходится <strong>против часовой стрелки</strong>, работа газа отрицательна: $A_{\text{цикла}} < 0$.</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <!-- 4. Практика и разбор -->
+    <section id="practice">
+        <h2>4. Примеры решений типовых задач</h2>
+
+        <details>
+            <summary>Пример (блок «Механика»): Расчёт пути и перемещения при реверсивном движении</summary>
+            <div class="details-body">
+                <p><strong>Условие:</strong> Тело движется прямолинейно вдоль оси $Ox$. График проекции скорости $v_x(t)$ представляет собой отрезок прямой, соединяющий точки $(0\text{ с}; 6\text{ м/с})$ и $(4\text{ с}; 0\text{ м/с})$, после чего продолжается в область отрицательных значений до точки $(6\text{ с}; -3\text{ м/с})$. Определите пройденный путь и проекцию перемещения тела за интервал времени от $0$ до $6\text{ с}$.</p>
+                <p><strong>Решение:</strong></p>
+                <ol>
+                    <li>Интервал времени разбивается на два участка движения:
+                        <ul>
+                            <li>От $0$ до $4\text{ с}$: движение в положительном направлении оси $Ox$. Фигура — треугольник над осью времени с катетами $4\text{ с}$ и $6\text{ м/с}$:
+                                <div class="math-block">
+                                    $$S_1 = \frac{1}{2} \cdot 4 \cdot 6 = 12\text{ м}$$
+                                </div>
+                            </li>
+                            <li>От $4$ до $6\text{ с}$: движение в противоположном направлении. Фигура — треугольник под осью времени с катетами $(6 - 4) = 2\text{ с}$ и $3\text{ м/с}$:
+                                <div class="math-block">
+                                    $$S_2 = \frac{1}{2} \cdot 2 \cdot 3 = 3\text{ м}$$
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Вычисляется полный пройденный путь:
+                        <div class="math-block">
+                            $$l = S_1 + S_2 = 12 + 3 = 15\text{ м}$$
+                        </div>
+                    </li>
+                    <li>Вычисляется проекция перемещения с учётом направления движения:
+                        <div class="math-block">
+                            $$s_x = S_1 - S_2 = 12 - 3 = 9\text{ м}$$
+                        </div>
+                    </li>
+                </ol>
+                <p><strong>Ответ:</strong> путь $l = 15\text{ м}$; перемещение $s_x = 9\text{ м}$.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Пример (блок «МКТ и термодинамика»): Расчёт работы газа в треугольном цикле</summary>
+            <div class="details-body">
+                <p><strong>Условие:</strong> Один моль идеального газа совершает циклический процесс $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$ в направлении по часовой стрелке. Параметры состояний: точка $1$ ($2\text{ л}$, $100\text{ кПа}$), точка $2$ ($6\text{ л}$, $300\text{ кПа}$), точка $3$ ($6\text{ л}$, $100\text{ кПа}$). Какую полезную работу совершает газ за один цикл?</p>
+                <p><strong>Решение:</strong></p>
+                <ol>
+                    <li>Полезная работа газа за цикл численно равна площади прямоугольного треугольника в координатах $p-V$:
+                        <div class="math-block">
+                            $$A = S_{\Delta} = \frac{1}{2} \cdot \Delta V \cdot \Delta p$$
+                        </div>
+                    </li>
+                    <li>Значения катетов переводятся в систему СИ:
+                        <div class="math-block">
+                            $$\Delta V = V_2 - V_1 = 6\text{ л} - 2\text{ л} = 4\text{ л} = 4 \cdot 10^{-3}\text{ м}^3$$
+                            $$\Delta p = p_2 - p_1 = 300\text{ кПа} - 100\text{ кПа} = 200\text{ кПа} = 200 \cdot 10^3\text{ Па}$$
+                        </div>
+                    </li>
+                    <li>Вычисляется числовое значение площади:
+                        <div class="math-block">
+                            $$A = \frac{1}{2} \cdot (4 \cdot 10^{-3}\text{ м}^3) \cdot (200 \cdot 10^3\text{ Па}) = 400\text{ Дж}$$
+                        </div>
+                    </li>
+                    <li>Так как направление обхода контура совпадает с ходом часовой стрелки, работа газа положительна: $A > 0$.</li>
+                </ol>
+                <p><strong>Ответ:</strong> $400\text{ Дж}$.</p>
+            </div>
+        </details>
+
+        <div class="callout warning">
+            <div class="callout-title">Важный совет по контролю размерностей</div>
+            <p>При расчёте физических величин через площадь фигур на координатной плоскости наиболее распространённой ошибкой является игнорирование масштаба осей:</p>
+            <ul>
+                <li>Давление часто задаётся во внесистемных единицах или кратных приставках: <strong>кПа</strong> ($10^3\text{ Па}$) или <strong>МПа</strong> ($10^6\text{ Па}$).</li>
+                <li>Объём традиционно указывается в <strong>литрах</strong> ($1\text{ л} = 10^{-3}\text{ м}^3$) или <strong>см³</strong> ($10^{-6}\text{ м}^3$).</li>
+                <li>Время на графиках кинематики или колебаний может быть указано в <strong>минутах</strong> или <strong>миллисекундах</strong> ($1\text{ мс} = 10^{-3}\text{ с}$).</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>Методические материалы для подготовки к ЕГЭ по физике • Полный курс математических методов</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
